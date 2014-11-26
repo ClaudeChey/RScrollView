@@ -20,7 +20,7 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     svc->setScrollViewSize( "Input your scroll size" );
     svc->setScrollViewContentSize( "Input your contents size" );
     svc->addScrollViewItem( "Your item on scrollview" );
-    addChild(svc->getScrollView()); // Impotant
+    addChild(svc->getScrollView()); // Important
 
 
 
@@ -71,6 +71,13 @@ If you need `RScrollViewController` delegate with `setScrollViewControllerDelega
     void onScrollTouchEnded(cocos2d::Vec2 position);
     void onDraggingDecelerate(cocos2d::Vec2 deceleratePosition);
     void onScrollingDecelerate(cocos2d::Vec2 deceleratePosition);
-    void onWillEndDraggingDecelerate(cocos2d::Vec2 deceleratePosition);
+    void onWillEndDraggingDecelerate(cocos2d::Vec2 deceleratePosition);  
 
-       
+
+
+##RScrollViewControllerDirection##
+You can specify the scrolling direction with `setScrollDirection `.
+
+    RScrollViewControllerDirection::BOTH
+    RScrollViewControllerDirection::VERTICAL
+    RScrollViewControllerDirection::HORIZONTAL
