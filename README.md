@@ -4,6 +4,7 @@ Simple usage :
 RScrollViewController* svc = RScrollViewController::create();
 svc->setScrollViewSize( "Input your scroll size" );
 svc->setScrollViewContentSize( "Input your contents size" );
+svc->addScrollViewItem( "Your item in scrollview" );
 addChild(svc->getScrollView()); // Impotant
 
 
@@ -38,4 +39,5 @@ stopScrolling();
 cocos2d::Vec2 getScrollViewContentOffset();
 cocos2d::Size getScrollViewContentSize();
 cocos2d::Layer* getScrollView();
+
 
