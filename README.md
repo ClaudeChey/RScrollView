@@ -1,12 +1,19 @@
-RScrollView is ScrollView for cocos2d-x 3.2
+RScrollView
+=========
 
-Simple usage :
+RScrollView is scrollView for cocos2d-x 3.2
+
+Simple usage
+-----------------------
 RScrollViewController* svc = RScrollViewController::create();
-svc->setScrollViewSize( "Input your scroll size" );
-svc->setScrollViewContentSize( "Input your contents size" );
-svc->addScrollViewItem( "Your item in scrollview" );
-addChild(svc->getScrollView()); // Impotant
 
+svc->setScrollViewSize( "Input your scroll size" );
+
+svc->setScrollViewContentSize( "Input your contents size" );
+
+svc->addScrollViewItem( "Your item in scrollview" );
+
+addChild(svc->getScrollView()); // Impotant
 
 Methods :
 
