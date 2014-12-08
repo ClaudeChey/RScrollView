@@ -57,15 +57,13 @@ void RScrollViewController::setScrollViewControllerDelegate(RScrollViewControlle
 void RScrollViewController::setScrollViewSize(const Size& size)
 {
     m_scrollViewRect.size = size;
-    if(m_scrollViewTouchRect.equals(Rect::ZERO))
-        m_scrollViewTouchRect.size = size;
     
     calcScrollingLimitPosition();
 }
 
 void RScrollViewController::setScrollViewTouchRect(const Rect& rect)
 {
-    m_scrollViewTouchRect = rect;
+    m_scrollViewTouchRectOriginal = rect;
 }
 
 void RScrollViewController::setScrollViewContentSize(const Size& size)
@@ -257,6 +255,16 @@ Layer* RScrollViewController::getScrollView()
 
 bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
 {
+    if(m_scrollViewTouchRectOriginal.equals(Rect::ZERO))
+    {
+        m_scrollViewTouchRect.origin = m_scrollView->getPosition();
+        m_scrollViewTouchRect.size = m_scrollViewRect.size;
+    }
+    else
+        m_scrollViewTouchRect = m_scrollViewTouchRectOriginal;
+
+    
+    m_scrollViewTouchRect.origin = m_scrollView->getPosition();
     if(m_scrollViewTouchRect.containsPoint(touch->getLocation())==false)
         return false;
     
@@ -266,7 +274,6 @@ bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
     m_animeMove = Vec2::ZERO;
     m_decelerate = Vec2::ZERO;
     m_dragDeceleratePos = Vec2::ZERO;
-    
     
     unschedule(schedule_selector(RScrollViewController::onLoopBounce));
     unschedule(schedule_selector(RScrollViewController::onLoopNoBounce));

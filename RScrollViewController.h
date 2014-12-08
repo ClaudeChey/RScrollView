@@ -112,8 +112,10 @@ private:
     cocos2d::Layer* m_background = nullptr;
 
     cocos2d::Rect m_scrollViewRect;
-    cocos2d::Rect m_scrollViewTouchRect = cocos2d::Rect::ZERO;
+    cocos2d::Rect m_scrollViewTouchRect;
     cocos2d::Size m_contentSize;
+    
+    cocos2d::Rect m_scrollViewTouchRectOriginal = cocos2d::Rect::ZERO;
     
     std::vector<RScrollViewItem*> m_vecScrollViewItem;
     RScrollViewControllerDirection m_direction = RScrollViewControllerDirection::BOTH;
