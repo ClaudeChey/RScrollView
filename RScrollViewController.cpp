@@ -245,11 +245,22 @@ Size RScrollViewController::getScrollViewContentSize()
     return m_contentSize;
 }
 
+vector<RScrollViewItem*> RScrollViewController::getScrollViewItem()
+{
+    return m_vecScrollViewItem;
+}
+
 Layer* RScrollViewController::getScrollView()
 {
     return m_scrollView;
 }
 
+
+
+void RScrollViewController::refreshItemVisible()
+{
+    itemVisibleForIntersectionScrollView();
+}
 
 
 
@@ -281,11 +292,10 @@ bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
     m_isTouchMoved = false;
     m_isPressedItem = false;
     m_itemForTouch = getItemForTouch(touch);
+    m_locationForItem = touch->getLocation();
     if(m_itemForTouch)
-    {
-        m_locationForItem = touch->getLocation();
-        scheduleOnce(schedule_selector(RScrollViewController::callOnTouchBeganItem), 0.05f);
-    }
+        scheduleOnce(schedule_selector(RScrollViewController::callOnTouchBeganItem), 0.02f);
+
     return true;
 }
 
@@ -300,15 +310,24 @@ void RScrollViewController::onTouchMoved(Touch *touch, Event *event)
 {
     if(m_delegate) m_delegate->onScrollTouchMoved(touch->getLocation());
     if(m_isScrollEnabled==false) return;
+
+    unschedule(schedule_selector(RScrollViewController::callOnTouchBeganItem));
     
-    m_isTouchMoved = true;
-    if(m_isPressedItem)
+    float dist = m_locationForItem.distance(touch->getLocation());
+    if(m_itemForTouch && (dist<30))
     {
-        m_itemForTouch->onTouchMovedItem(touch->getLocation());
-        m_isPressedItem = false;
+        m_isTouchMoved = false;
+        return;
     }
     else
-        unschedule(schedule_selector(RScrollViewController::callOnTouchBeganItem));
+    {
+        m_isTouchMoved = true;
+        if(m_isPressedItem)
+        {
+            m_itemForTouch->onTouchMovedItem(touch->getLocation());
+            m_isPressedItem = false;
+        }
+    }
     
     
     m_containerPos = m_container->getPosition();
@@ -597,7 +616,7 @@ void RScrollViewController::itemVisibleForIntersectionScrollView()
         item = (RScrollViewItem*)*it;
         itemRect = item->getContentRect();
         itemRect.origin = m_containerItem->convertToWorldSpace(item->getContentRect().origin);
-
+        
         if( m_scrollViewRect.intersectsRect(itemRect) )
             item->setOutOfRangeOnDisplay(false);
         else
@@ -670,7 +689,8 @@ void RScrollViewController::scheduleOnce(cocos2d::SEL_SCHEDULE selector, float d
 
 void RScrollViewController::unschedule(SEL_SCHEDULE selector)
 {
-    Director::getInstance()->getScheduler()->unschedule(selector, this);
+    if(Director::getInstance()->getScheduler()->isScheduled(selector, this))
+        Director::getInstance()->getScheduler()->unschedule(selector, this);
 }
 
 void RScrollViewController::unscheduleAll()
