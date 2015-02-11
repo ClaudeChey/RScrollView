@@ -57,7 +57,10 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     // get methods
     cocos2d::Vec2 getScrollViewContentOffset();
     cocos2d::Size getScrollViewContentSize();
-    cocos2d::Layer* getScrollView();     
+    std::vector<RScrollViewItem*> getScrollViewItem();
+    cocos2d::Layer* getScrollView();
+
+    void refreshItemVisible();
 
 
 
