@@ -1,7 +1,7 @@
 RScrollView
 =========
 
-RScrollView is scrollview for cocos2d-x 3.2
+RScrollView is scrollview for cocos2d-x 3.2 or higher
 
  - RScrollViewController
  - RScrollViewItem
