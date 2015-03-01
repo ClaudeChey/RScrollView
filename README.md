@@ -33,6 +33,7 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     setScrollViewTouchRect(const cocos2d::Rect& rect);
     setScrollViewContentSize(const cocos2d::Size& size);
     setScrollViewContentOffset(const cocos2d::Vec2& offset);
+    setScrollViewBackgroundOffset(const cocos2d::Vec2& offset);
     setScrollViewBackgroundLayer(cocos2d::Layer* background);
     setScrollDirection(RScrollViewControllerDirection direction);
     setScrollBounces(bool val);
@@ -41,7 +42,7 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     
 
     // add/remove item
-    addScrollViewItemVector(const std::vector<RScrollViewItem*> vec);
+    addScrollViewItemVector(const std::vector<RScrollViewItem*>* vec);
     addScrollViewItem(RScrollViewItem* item);
     removeScrollViewItem(RScrollViewItem* item);
     removeAllScrollViewItem();
@@ -51,17 +52,20 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     scrollBy(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
     scrollTo(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
     scrollToTop(bool animated, const std::function<void()>& animatedComplete);
+    scrollToBottom(bool animated, const std::function<void()>& animatedComplete);
     stopScrolling();
     
 
     // get methods
     cocos2d::Vec2 getScrollViewContentOffset();
+    cocos2d::Vec2 getScrollViewBackgroundOffset();
     cocos2d::Size getScrollViewContentSize();
-    std::vector<RScrollViewItem*> getScrollViewItem();
+    std::vector<RScrollViewItem*>* getScrollViewItemVector();
     cocos2d::Layer* getScrollView();
 
     void refreshItemVisible();
-
+    bool isScrollViewOverTheTop();
+    bool isScrollViewOverTheBottom();
 
 
 ##RScrollViewControllerDelegate##

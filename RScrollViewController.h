@@ -1,13 +1,13 @@
 //
 //  RScrollViewController.h
-//  Noc
+//  Nock
 //
 //  Created by Claude Chey on 2014. 11. 16..
 //
 //
 
-#ifndef __Noc__RScrollViewController__
-#define __Noc__RScrollViewController__
+#ifndef __Nock__RScrollViewController__
+#define __Nock__RScrollViewController__
 
 #include <stdio.h>
 #include <cocos2d.h>
@@ -54,13 +54,14 @@ public:
     void setScrollViewTouchRect(const cocos2d::Rect& rect);
     void setScrollViewContentSize(const cocos2d::Size& size);
     void setScrollViewContentOffset(const cocos2d::Vec2& offset);
+    void setScrollViewBackgroundOffset(const cocos2d::Vec2& offset);
     void setScrollViewBackgroundLayer(cocos2d::Layer* background);
     void setScrollDirection(RScrollViewControllerDirection direction);
     void setScrollBounces(bool val);
     void setScrollEnabled(bool val);
     void setScrollTouchEvent(bool val);
     
-    void addScrollViewItemVector(const std::vector<RScrollViewItem*> vec);
+    void addScrollViewItemVector(const std::vector<RScrollViewItem*>* vec);
     void addScrollViewItem(RScrollViewItem* item);
     void removeScrollViewItem(RScrollViewItem* item);
     void removeAllScrollViewItem();
@@ -68,11 +69,18 @@ public:
     void scrollBy(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
     void scrollTo(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
     void scrollToTop(bool animated, const std::function<void()>& animatedComplete);
+    void scrollToBottom(bool animated, const std::function<void()>& animatedComplete);
     void stopScrolling();
     
     cocos2d::Vec2 getScrollViewContentOffset();
+    cocos2d::Vec2 getScrollViewBackgroundOffset();
     cocos2d::Size getScrollViewContentSize();
+    std::vector<RScrollViewItem*>* getScrollViewItemVector();
     cocos2d::Layer* getScrollView();
+    
+    void refreshItemVisible();
+    bool isScrollViewOverTheTop();
+    bool isScrollViewOverTheBottom();
     
 private:
     void init();
@@ -109,6 +117,7 @@ private:
     cocos2d::Layer* m_scrollView;
     cocos2d::Layer* m_container;
     cocos2d::Layer* m_containerItem;
+    cocos2d::Layer* m_containerBackground = nullptr;
     cocos2d::Layer* m_background = nullptr;
 
     cocos2d::Rect m_scrollViewRect;
@@ -117,7 +126,7 @@ private:
     
     cocos2d::Rect m_scrollViewTouchRectOriginal = cocos2d::Rect::ZERO;
     
-    std::vector<RScrollViewItem*> m_vecScrollViewItem;
+    std::vector<RScrollViewItem*>* m_vecScrollViewItem;
     RScrollViewControllerDirection m_direction = RScrollViewControllerDirection::BOTH;
 
     bool m_isScrollEnabled = true;
@@ -135,7 +144,7 @@ private:
     RScrollViewItem* m_itemForTouch;
     bool m_isPressedItem;
     bool m_isTouchMoved = false;
-    
+        
     cocos2d::Vec2 m_locationForItem;
     cocos2d::Vec2 m_dragDeceleratePos;
     cocos2d::Vec2 m_animeMove;
@@ -150,4 +159,4 @@ private:
     cocos2d::Vec2 m_sumTargetPos;
 };
 
-#endif /* defined(__Noc__RScrollViewController__) */
+#endif /* defined(__Nock__RScrollViewController__) */

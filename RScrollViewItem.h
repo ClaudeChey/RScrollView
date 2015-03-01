@@ -1,13 +1,13 @@
 //
 //  RScrollViewItem.h
-//  Noc
+//  Nock
 //
 //  Created by Claude Chey on 2014. 10. 23..
 //
 //
 
-#ifndef __Noc__RScrollViewItem__
-#define __Noc__RScrollViewItem__
+#ifndef __Nock__RScrollViewItem__
+#define __Nock__RScrollViewItem__
 
 #include <stdio.h>
 #include <cocos2d.h>
@@ -32,4 +32,4 @@ private:
     cocos2d::Rect m_contentRect = cocos2d::Rect::ZERO;
 };
 
-#endif /* defined(__Noc__RScrollViewItem__) */
+#endif /* defined(__Nock__RScrollViewItem__) */

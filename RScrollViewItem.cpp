@@ -1,6 +1,6 @@
 //
 //  RScrollViewItem.cpp
-//  Noc
+//  Nock
 //
 //  Created by Claude Chey on 2014. 10. 23..
 //
