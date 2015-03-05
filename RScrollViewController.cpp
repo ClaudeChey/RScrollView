@@ -59,7 +59,6 @@ void RScrollViewController::setScrollViewControllerDelegate(RScrollViewControlle
 void RScrollViewController::setScrollViewSize(const Size& size)
 {
     m_scrollViewRect.size = size;
-    
     calcScrollingLimitPosition();
 }
 
@@ -201,87 +200,6 @@ void RScrollViewController::removeAllScrollViewItem()
 
 
 
-
-void RScrollViewController::scrollBy(const Vec2& position, bool animated, const function<void()>& animatedComplete)
-{
-    Vec2 targetPos = m_container->getPosition() + position;
-    if(animated==false)
-        m_container->setPosition(targetPos);
-    else
-    {
-        itemVisibleAll();
-        MoveBy* move = MoveBy::create(0.3f, targetPos);
-        EaseCubicActionInOut* easeMove = EaseCubicActionInOut::create(move);
-        CallFunc* func = CallFunc::create([=]()->void {
-            itemVisibleForIntersectionScrollView();
-            if(animatedComplete!=nullptr) animatedComplete();
-        });
-        m_container->runAction(Sequence::create(easeMove, func, NULL));
-    }
-}
-
-void RScrollViewController::scrollTo(const Vec2& position, bool animated, const function<void()>& animatedComplete)
-{
-    if(animated==false)
-        m_container->setPosition(position);
-    else
-    {
-        itemVisibleAll();
-        MoveTo* move = MoveTo::create(0.3f, position);
-        EaseCubicActionInOut* easeMove = EaseCubicActionInOut::create(move);
-        CallFunc* func = CallFunc::create([=]()->void {
-            itemVisibleForIntersectionScrollView();
-            if(animatedComplete!=nullptr) animatedComplete();
-        });
-        m_container->runAction(Sequence::create(easeMove, func, NULL));
-    }
-}
-
-void RScrollViewController::scrollToTop(bool animated, const function<void()>& animatedComplete)
-{
-    if(animated==false)
-        m_container->setPositionY(m_scrollMinY);
-    else
-    {
-        itemVisibleAll();
-        float currX = m_scrollView->getPositionX();
-        MoveTo* move = MoveTo::create(0.3f, Vec2(currX, m_scrollMinY));
-        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
-        CallFunc* func = CallFunc::create([=]()->void {
-            itemVisibleForIntersectionScrollView();
-            if(animatedComplete!=nullptr) animatedComplete();
-        });
-        m_container->runAction(Sequence::create(easeMove, func, NULL));
-    }
-}
-
-void RScrollViewController::scrollToBottom(bool animated, const function<void()>& animatedComplete)
-{
-    if(animated==false)
-        m_container->setPositionY(m_scrollMaxY);
-    else
-    {
-        itemVisibleAll();
-        float currX = m_scrollView->getPositionX();
-        MoveTo* move = MoveTo::create(0.3f, Vec2(currX, m_scrollMaxY));
-        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
-        CallFunc* func = CallFunc::create([=]()->void {
-            itemVisibleForIntersectionScrollView();
-            if(animatedComplete!=nullptr) animatedComplete();
-        });
-        m_container->runAction(Sequence::create(easeMove, func, NULL));
-    }
-}
-
-void RScrollViewController::stopScrolling()
-{
-    m_isStopScrolling = true;
-    
-}
-
-
-
-
 Vec2 RScrollViewController::getScrollViewContentOffset()
 {
     return m_containerItem->getPosition();
@@ -310,11 +228,135 @@ Layer* RScrollViewController::getScrollView()
     return m_scrollView;
 }
 
-
-
-void RScrollViewController::refreshItemVisible()
+void RScrollViewController::scrollBy(const Vec2& position, bool animated, const function<void()>& animatedComplete)
 {
-    itemVisibleForIntersectionScrollView();
+    Vec2 targetPos = m_container->getPosition() + position;
+    if(animated==false)
+    {
+        m_container->setPosition(targetPos);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        MoveBy* move = MoveBy::create(0.3f, targetPos);
+        EaseCubicActionInOut* easeMove = EaseCubicActionInOut::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::scrollTo(const Vec2& position, bool animated, const function<void()>& animatedComplete)
+{
+    if(animated==false)
+    {
+        m_container->setPosition(position);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        MoveTo* move = MoveTo::create(0.3f, position);
+        EaseCubicActionInOut* easeMove = EaseCubicActionInOut::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::scrollToTop(bool animated, const function<void()>& animatedComplete)
+{
+    if(animated==false)
+    {
+        m_container->setPositionY(m_scrollMinY);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        float currX = m_scrollView->getPositionX();
+        MoveTo* move = MoveTo::create(0.3f, Vec2(currX, m_scrollMinY));
+        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::scrollToBottom(bool animated, const function<void()>& animatedComplete)
+{
+    if(animated==false)
+    {
+        m_container->setPositionY(m_scrollMaxY);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        float currX = m_scrollView->getPositionX();
+        MoveTo* move = MoveTo::create(0.3f, Vec2(currX, m_scrollMaxY));
+        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::scrollToLeft(bool animated, const function<void()>& animatedComplete)
+{
+    if(animated==false)
+    {
+        m_container->setPositionX(m_scrollMaxX);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        float currY = m_scrollView->getPositionY();
+        MoveTo* move = MoveTo::create(0.3f, Vec2(m_scrollMaxX, currY));
+        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::scrollToRight(bool animated, const function<void()>& animatedComplete)
+{
+    if(animated==false)
+    {
+        m_container->setPositionX(m_scrollMinX);
+        itemVisibleForIntersectionScrollView();
+    }
+    else
+    {
+        itemVisibleAll();
+        float currY = m_scrollView->getPositionY();
+        MoveTo* move = MoveTo::create(0.3f, Vec2(m_scrollMinX, currY));
+        EaseCubicActionIn* easeMove = EaseCubicActionIn::create(move);
+        CallFunc* func = CallFunc::create([=]()->void {
+            itemVisibleForIntersectionScrollView();
+            if(animatedComplete!=nullptr) animatedComplete();
+        });
+        m_container->runAction(Sequence::create(easeMove, func, NULL));
+    }
+}
+
+void RScrollViewController::stopScrolling()
+{
+    m_isStopScrolling = true;
+    
 }
 
 bool RScrollViewController::isScrollViewOverTheTop()
@@ -328,6 +370,17 @@ bool RScrollViewController::isScrollViewOverTheBottom()
 }
 
 
+void RScrollViewController::refreshItemVisible()
+{
+    itemVisibleForIntersectionScrollView();
+}
+
+
+
+
+
+
+
 
 
 bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
@@ -338,10 +391,10 @@ bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
         m_scrollViewTouchRect.size = m_scrollViewRect.size;
     }
     else
+    {
         m_scrollViewTouchRect = m_scrollViewTouchRectOriginal;
-
+    }
     
-    m_scrollViewTouchRect.origin = m_scrollView->getPosition();
     if(m_scrollViewTouchRect.containsPoint(touch->getLocation())==false)
         return false;
     
@@ -352,15 +405,29 @@ bool RScrollViewController::onTouchBegan(Touch *touch, Event *event)
     m_decelerate = Vec2::ZERO;
     m_dragDeceleratePos = Vec2::ZERO;
     
-    unschedule(schedule_selector(RScrollViewController::onLoopBounce));
-    unschedule(schedule_selector(RScrollViewController::onLoopNoBounce));
+    bool isScheduling = false;
+    if(isScheduled(schedule_selector(RScrollViewController::onLoopBounce)) ||
+       isScheduled(schedule_selector(RScrollViewController::onLoopNoBounce)))
+    {
+        isScheduling = true;
+        unschedule(schedule_selector(RScrollViewController::onLoopBounce));
+        unschedule(schedule_selector(RScrollViewController::onLoopNoBounce));
+    }
     
     m_isTouchMoved = false;
     m_isPressedItem = false;
-    m_itemForTouch = getItemForTouch(touch);
-    m_locationForItem = touch->getLocation();
-    if(m_itemForTouch)
-        scheduleOnce(schedule_selector(RScrollViewController::callOnTouchBeganItem), 0.02f);
+
+    if(isScheduling==false)
+    {
+        m_locationForItem = touch->getLocation();
+        m_itemForTouch = getItemForTouch(touch);
+        if(m_itemForTouch)
+        {
+            scheduleOnce(schedule_selector(RScrollViewController::callOnTouchBeganItem), 0.02f);
+        }
+    }
+    else
+        m_itemForTouch = nullptr;
 
     return true;
 }
@@ -376,25 +443,24 @@ void RScrollViewController::onTouchMoved(Touch *touch, Event *event)
 {
     if(m_delegate) m_delegate->onScrollTouchMoved(touch->getLocation());
     if(m_isScrollEnabled==false) return;
-
-    if(m_isPressedItem==false)
-        unschedule(schedule_selector(RScrollViewController::callOnTouchBeganItem));
     
-    float dist = m_locationForItem.distance(touch->getLocation());
-    if(m_itemForTouch && (dist<30))
+    if(m_itemForTouch && m_isTouchMoved==false)
     {
-        m_isTouchMoved = false;
-        return;
+        float dist = m_locationForItem.distance(touch->getLocation());
+        if(dist<30)
+            return;
     }
-    else
+    
+    unschedule(schedule_selector(RScrollViewController::callOnTouchBeganItem));
+
+    m_isTouchMoved = true;
+    if(m_isPressedItem)
     {
-        m_isTouchMoved = true;
-        if(m_isPressedItem)
-        {
-            m_itemForTouch->onTouchMovedItem(touch->getLocation());
-            m_isPressedItem = false;
-        }
+        m_isPressedItem = false;
+        m_itemForTouch->onTouchMovedItem(touch->getLocation());
     }
+    
+    
     
     
     m_containerPos = m_container->getPosition();
@@ -519,7 +585,7 @@ void RScrollViewController::onLoopBounce(float dt)
         else if(m_containerPos.x<m_scrollMinX) m_decelerate.x = (m_scrollMinX - m_containerPos.x) * 0.2f;
         else m_decelerate.x = 0.0f;
         
-        if( -0.1f < m_animeMove.x && m_animeMove.x < 0.1f && -0.1f < m_decelerate.x && m_decelerate.x < 0.1f  )
+        if( -m_stopGap < m_animeMove.x && m_animeMove.x < m_stopGap && -m_stopGap < m_decelerate.x && m_decelerate.x < m_stopGap  )
         {
             if(m_decelerate.x<0)
                 m_targetPos.x = m_scrollMaxX;
@@ -548,7 +614,7 @@ void RScrollViewController::onLoopBounce(float dt)
         else if(m_containerPos.y<m_scrollMinY) m_decelerate.y = (m_scrollMinY - m_containerPos.y) * 0.2f;
         else m_decelerate.y = 0.0f;
         
-        if( -0.1f < m_animeMove.y && m_animeMove.y < 0.1f && -0.1f < m_decelerate.y && m_decelerate.y < 0.1f  )
+        if( -m_stopGap < m_animeMove.y && m_animeMove.y < m_stopGap && -m_stopGap < m_decelerate.y && m_decelerate.y < m_stopGap  )
         {
             if(m_decelerate.y<0)
                 m_targetPos.y = m_scrollMaxY;
@@ -673,23 +739,28 @@ void RScrollViewController::itemVisibleForIntersectionScrollView()
 {
     if(m_vecScrollViewItem->empty()) return;
     
-    m_scrollViewRect.origin = m_scrollView->getPosition();
-
     RScrollViewItem* item;
-    Rect itemRect;
     vector<RScrollViewItem*>::const_iterator it = m_vecScrollViewItem->begin();
     for(; it!=m_vecScrollViewItem->end(); ++it)
     {
         item = (RScrollViewItem*)*it;
-        itemRect = item->getContentRect();
-        itemRect.origin = m_containerItem->convertToWorldSpace(item->getContentRect().origin);
-        
-        if( m_scrollViewRect.intersectsRect(itemRect) )
-            item->setOutOfRangeOnDisplay(false);
-        else
-            item->setOutOfRangeOnDisplay(true);
+        item->setOutOfRangeOnDisplay(isOutOfRangeOnDisplay(item));
     }
 }
+
+bool RScrollViewController::isOutOfRangeOnDisplay(RScrollViewItem* item)
+{
+    Vec2 conSum = m_containerItem->getPosition() + m_container->getPosition();
+    Rect itemRect = item->getContentRect();
+    itemRect.origin = itemRect.origin + conSum;
+    
+    if( m_scrollViewRect.intersectsRect(itemRect) )
+        return false;
+    else
+        return true;
+}
+
+
 
 
 RScrollViewItem* RScrollViewController::getItemForTouch(Touch *touch)
@@ -743,6 +814,12 @@ inline bool RScrollViewController::isDirectionVertical()
 
 
 
+
+
+bool RScrollViewController::isScheduled(SEL_SCHEDULE selector)
+{
+    return Director::getInstance()->getScheduler()->isScheduled(selector, this);
+}
 
 void RScrollViewController::schedule(SEL_SCHEDULE selector)
 {

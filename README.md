@@ -53,6 +53,8 @@ When you use the RScrollViewItem recommend that you create by inheritance.
     scrollTo(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
     scrollToTop(bool animated, const std::function<void()>& animatedComplete);
     scrollToBottom(bool animated, const std::function<void()>& animatedComplete);
+    scrollToLeft(bool animated, const std::function<void()>& animatedComplete);
+    scrollToRight(bool animated, const std::function<void()>& animatedComplete);
     stopScrolling();
     
 

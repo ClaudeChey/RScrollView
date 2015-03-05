@@ -51,7 +51,7 @@ public:
     void setScrollViewControllerDelegate(RScrollViewControllerDelegate* delegate);
     
     void setScrollViewSize(const cocos2d::Size& size);
-    void setScrollViewTouchRect(const cocos2d::Rect& rect);
+    void setScrollViewTouchRect(const cocos2d::Rect& rect); // absolute value on screen
     void setScrollViewContentSize(const cocos2d::Size& size);
     void setScrollViewContentOffset(const cocos2d::Vec2& offset);
     void setScrollViewBackgroundOffset(const cocos2d::Vec2& offset);
@@ -66,21 +66,24 @@ public:
     void removeScrollViewItem(RScrollViewItem* item);
     void removeAllScrollViewItem();
     
-    void scrollBy(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
-    void scrollTo(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
-    void scrollToTop(bool animated, const std::function<void()>& animatedComplete);
-    void scrollToBottom(bool animated, const std::function<void()>& animatedComplete);
-    void stopScrolling();
-    
     cocos2d::Vec2 getScrollViewContentOffset();
     cocos2d::Vec2 getScrollViewBackgroundOffset();
     cocos2d::Size getScrollViewContentSize();
     std::vector<RScrollViewItem*>* getScrollViewItemVector();
     cocos2d::Layer* getScrollView();
     
-    void refreshItemVisible();
+    void scrollBy(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
+    void scrollTo(const cocos2d::Vec2& position, bool animated, const std::function<void()>& animatedComplete);
+    
+    void scrollToTop(bool animated, const std::function<void()>& animatedComplete);
+    void scrollToBottom(bool animated, const std::function<void()>& animatedComplete);
+    void scrollToLeft(bool animated, const std::function<void()>& animatedComplete);
+    void scrollToRight(bool animated, const std::function<void()>& animatedComplete);
+    void stopScrolling();
+    
     bool isScrollViewOverTheTop();
     bool isScrollViewOverTheBottom();
+    void refreshItemVisible();
     
 private:
     void init();
@@ -92,19 +95,21 @@ private:
     void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
     void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
     
-    void setContainerPosition(cocos2d::Vec2 position);
-    
     void onLoopBounce(float dt);
     void onLoopNoBounce(float dt);
+    void setContainerPosition(cocos2d::Vec2 position);
     
     void itemVisibleAll();
     void itemVisibleForIntersectionScrollView();
+    bool isOutOfRangeOnDisplay(RScrollViewItem* item);
+    
     RScrollViewItem* getItemForTouch(cocos2d::Touch *touch);
     
     bool isDirectionBoth();
     bool isDirectionHorizontal();
     bool isDirectionVertical();
     
+    bool isScheduled(cocos2d::SEL_SCHEDULE selector);
     void schedule(cocos2d::SEL_SCHEDULE selector);
     void scheduleOnce(cocos2d::SEL_SCHEDULE selector, float delay);
     void unschedule(cocos2d::SEL_SCHEDULE selector);
@@ -121,9 +126,8 @@ private:
     cocos2d::Layer* m_background = nullptr;
 
     cocos2d::Rect m_scrollViewRect;
-    cocos2d::Rect m_scrollViewTouchRect;
+    cocos2d::Rect m_scrollViewTouchRect = cocos2d::Rect::ZERO;
     cocos2d::Size m_contentSize;
-    
     cocos2d::Rect m_scrollViewTouchRectOriginal = cocos2d::Rect::ZERO;
     
     std::vector<RScrollViewItem*>* m_vecScrollViewItem;
@@ -136,12 +140,14 @@ private:
     bool m_loopEndVertical = false;
     bool m_isDragDecelerate = false;
 
+    const float m_stopGap = 3.0f;
+    
     const float m_scrollMaxX = 0.0f;
     float m_scrollMinX = 0.0f;
     const float m_scrollMaxY = 0.0f;
     float m_scrollMinY = 0.0f;
     
-    RScrollViewItem* m_itemForTouch;
+    RScrollViewItem* m_itemForTouch = nullptr;
     bool m_isPressedItem;
     bool m_isTouchMoved = false;
         
